@@ -181,8 +181,8 @@ export const useSpeechRecognition = (lang = "en") => {
             setTranscript("");
             recRef.current.start();
             setListening(true);
-        } catch {
-            /* already running */
+        } catch (err) {
+            console.debug("speech recognition start skipped:", err?.message);
         }
     }, []);
 
@@ -190,8 +190,8 @@ export const useSpeechRecognition = (lang = "en") => {
         if (!recRef.current) return;
         try {
             recRef.current.stop();
-        } catch {
-            /* noop */
+        } catch (err) {
+            console.debug("speech recognition stop skipped:", err?.message);
         }
         setListening(false);
     }, []);

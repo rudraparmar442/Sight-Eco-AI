@@ -17,6 +17,14 @@ import { VoiceCommand } from "@/components/VoiceCommand";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+const TOAST_OPTIONS = {
+    style: {
+        background: "#1A1A1A",
+        border: "2px solid #FFEA00",
+        color: "#fff",
+    },
+};
+
 const Inner = () => {
     const { lang, captionLang, voiceGuidance, announce } = useA11y();
     const t = useT(lang);
@@ -171,13 +179,7 @@ const Inner = () => {
             <Toaster
                 theme="dark"
                 position="top-center"
-                toastOptions={{
-                    style: {
-                        background: "#1A1A1A",
-                        border: "2px solid #FFEA00",
-                        color: "#fff",
-                    },
-                }}
+                toastOptions={TOAST_OPTIONS}
             />
         </div>
     );
