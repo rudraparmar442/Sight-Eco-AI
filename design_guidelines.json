@@ -1,0 +1,96 @@
+{
+  "project_name": "SightEco AI",
+  "theme": "DARK",
+  "archetype": "Archetype 4: Swiss & High-Contrast (Accessibility Focus)",
+  "rationale": "For an accessibility-first tool aimed at the visually impaired, contrast and clarity are paramount. Archetype 4 provides the structural rigidity and stark contrast needed. We are employing a 'Swiss Brutalist' approach: prioritizing high legibility, massive typography, thick focus rings, and zero ambiguity.",
+  "colors": {
+    "base": {
+      "background": "#0A0A0A",
+      "surface": "#1A1A1A",
+      "surface_glass": "rgba(26, 26, 26, 0.8)",
+      "border": "#333333"
+    },
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#E0E0E0",
+      "muted": "#A3A3A3"
+    },
+    "brand": {
+      "primary": "#FFEA00",
+      "primary_hover": "#FFD600",
+      "primary_foreground": "#000000",
+      "secondary": "#00E5FF"
+    },
+    "high_contrast_mode": {
+      "background": "#000000",
+      "text": "#FFFFFF",
+      "border": "#FFFFFF",
+      "focus": "#FFFF00"
+    }
+  },
+  "typography": {
+    "heading_font": "Cabinet Grotesk",
+    "body_font": "Atkinson Hyperlegible",
+    "rationale": "Cabinet Grotesk provides a distinctive, fresh voice that breaks the 'SaaS default' mold, while Atkinson Hyperlegible is specifically designed by the Braille Institute for maximum legibility and character distinction.",
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tighter font-black",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-bold",
+      "h3": "text-xl sm:text-2xl font-bold",
+      "body": "text-base lg:text-lg leading-relaxed",
+      "large_caption": "text-3xl sm:text-4xl font-bold leading-tight"
+    },
+    "installation_instructions": "Load 'Cabinet Grotesk' via Fontshare or local assets. Load 'Atkinson Hyperlegible' via Google Fonts."
+  },
+  "spacing_and_layout": {
+    "philosophy": "Generous Spacing (p-8 to p-12) to prevent accidental misclicks. Control Room Grid for functional areas.",
+    "container_padding": "p-6 md:p-12",
+    "grid_system": "grid-cols-1 md:grid-cols-12 gap-8",
+    "glassmorphism_rules": "Use glassmorphism strictly with high-contrast borders (border-white/20) and backdrop-saturate-150. Ensure text inside glass containers maintains a 7:1 contrast ratio (WCAG AAA)."
+  },
+  "accessibility_rules_CRITICAL": {
+    "focus_indicators": "ALL interactive elements must have a thick focus state: `focus-visible:ring-4 focus-visible:ring-[#FFEA00] focus-visible:ring-offset-4 focus-visible:ring-offset-black`",
+    "aria": "Use ARIA landmarks extensively (main, nav, region). Ensure all buttons have `aria-label`.",
+    "keyboard_nav": "The entire app MUST be navigable via Tab key without mouse traps.",
+    "voice_output": "Provide auditory feedback for major actions (e.g., 'Image Uploaded').",
+    "contrast_ratio": "Minimum 7:1 for all text in high-contrast mode, minimum 4.5:1 in standard dark mode.",
+    "data_testid": "ALL interactive elements MUST include a descriptive data-testid (e.g., data-testid='upload-image-button')."
+  },
+  "components": {
+    "buttons": "Large touch targets (min-h-[56px]). Primary buttons use pure #FFEA00 background with #000000 text. Hover states elevate with sharp drop shadows, no soft blurs.",
+    "upload_zone": "Massive target area (h-64+), dashed white border (2px), distinctly changes on drag-over (bg-white/10 + solid yellow border).",
+    "caption_display": "Dedicated massive card, using `text-3xl` or larger, with a quick 'Copy' and 'Play Audio' floating action bar tightly coupled to the text.",
+    "sidebar": "Fixed accessibility sidebar or floating FAB that opens a drawer. Must contain toggle for High Contrast, Font Size (A+/A-), Dark/Light mode, and Voice Guidance.",
+    "icons": "Use `lucide-react` with a minimum size of 24px and explicit stroke-width of 2.5 for clarity."
+  },
+  "interactions_and_motion": {
+    "hover_states": "Hard background color changes, no subtle opacity shifts. Text must remain pure white/black.",
+    "transitions": "Use quick, crisp transitions (duration-150). Respect `prefers-reduced-motion`.",
+    "audio_controls": "Play, Pause, Resume, Stop buttons must be instantly accessible next to the generated text, never hidden behind dropdowns."
+  },
+  "media": {
+    "image_urls": [
+      {
+        "category": "hero_background",
+        "url": "https://static.prod-images.emergentagent.com/jobs/345c19fd-5eaa-4b96-ab1f-667ebc1ef5bb/images/ab7299e014f6a2d3ba995bac53aeaa77f702b8a75a990f124194674f39f8becf.png",
+        "description": "Abstract futuristic dark theme background with soundwaves"
+      },
+      {
+        "category": "hero_graphic",
+        "url": "https://static.prod-images.emergentagent.com/jobs/345c19fd-5eaa-4b96-ab1f-667ebc1ef5bb/images/5ed2b6b5ee96df7cdf6711d783e3e73b0286a58b7f7d1e5cfb0f56083ab0f86e.png",
+        "description": "Minimalist 3D render of an eye blending into a speaker cone"
+      },
+      {
+        "category": "about_placeholder",
+        "url": "https://images.unsplash.com/photo-1699707143587-31a07b51db51?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njd8MHwxfHNlYXJjaHwzfHxibGluZCUyMHBlcnNvbiUyMHVzaW5nJTIwdGVjaG5vbG9neSUyMG1vZGVybiUyMGNsZWFyfGVufDB8fHx8MTc3ODQyMzIzNHww&ixlib=rb-4.1.0&q=85",
+        "description": "Person using technology - for feature block illustration"
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Strictly follow WCAG AAA contrast ratios (7:1).",
+    "Do NOT use 'Inter' or 'Roboto'. Use 'Cabinet Grotesk' for headings and 'Atkinson Hyperlegible' for body. Update Tailwind config.",
+    "Ensure the Text-to-Speech API handles long captions smoothly with Play/Pause.",
+    "Bind 'data-testid' to ALL interactive elements (buttons, inputs, toggles).",
+    "Implement High Contrast Toggle that sets app background to #000000, text to #FFFFFF, and focus rings to #FFFF00."
+  ]
+}
