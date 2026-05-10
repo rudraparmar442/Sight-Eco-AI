@@ -1,0 +1,66 @@
+{
+  "summary": "End-to-end testing of SightEco AI: backend pytest (6 tests, 5 passed, 1 minor failure on history field shape) and Playwright frontend coverage of upload→caption flow, TTS controls, A11y panel, language toggle, history panel, keyboard shortcut. Real Gemini 2.5 Pro vision captions generated successfully for both English and Hindi. Upload flow works end-to-end. One TTS-related issue likely tied to headless Chromium and one cosmetic backend response shape issue identified.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {
+        "endpoint": "GET /api/history",
+        "issue": "Response items still include the field `image_preview: null` even though MongoDB projection excludes it. Cause: `response_model=List[CaptionEntry]` re-adds the optional field. Spec asked for the field to be excluded from history response. Fix: either set `response_model_exclude={'image_preview'}` on the route, switch the response model to a slimmer model (without image_preview), or call `model_dump(exclude={'image_preview'})` on each item."
+      }
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "ResultPanel TTS controls",
+        "issue": "Clicking [data-testid='play-caption-button'] does not change UI state to show [data-testid='pause-caption-button'] in headless browser. window.speechSynthesis.speaking and .pending both remain false after click. This may be a known headless Chromium limitation (no voices loaded -> getVoices() returns []), but the UI should still flip to a 'speaking' state optimistically and rely on onend/onerror to revert. Recommend updating useSpeech to set isPlaying=true synchronously on speak() invocation rather than waiting for the unreliable onstart event, and to fall back gracefully if voices array is empty.",
+        "selector": "[data-testid='play-caption-button']",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "verified_flows": [
+    "GET /api/ -> 200 with model gemini-2.5-pro",
+    "POST /api/predict (image/jpeg, language=en) -> 200, real-content caption",
+    "POST /api/predict (image/jpeg, language=hi) -> 200, caption contains Devanagari characters",
+    "POST /api/predict (text/plain) -> 400 rejected",
+    "GET /api/history -> 200, list, _id excluded (image_preview field still present as null - minor)",
+    "DELETE /api/history -> 200, returns deleted count, subsequent GET returns []",
+    "Frontend loads with Hero title 'Seeing the world through AI' and yellow CTA (testid hero-upload-cta)",
+    "Upload via [data-testid=upload-file-input] triggers POST /api/predict, shows [data-testid=upload-loading] spinner, then displays real caption in [data-testid=caption-text]",
+    "[data-testid=copy-caption-button] and [data-testid=download-caption-button] present and clickable",
+    "[data-testid=open-a11y-panel-button] opens panel; high-contrast-toggle, dark-mode-panel-toggle, voice-guidance-toggle, lang-en-button, lang-hi-button, font-decrease-button, font-reset-button, font-increase-button all present",
+    "high-contrast-toggle adds 'high-contrast' class on document.documentElement (verified true)",
+    "lang-hi-button switches UI text to Hindi ('साइटईको AI' rendered)",
+    "[data-testid=history-section] displays past captions; history populated with 2 items after uploads",
+    "[data-testid=caption-language-select] present and functional"
+  ],
+  "test_report_links": [
+    "/app/backend/tests/test_sighteco_api.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Fix /api/history response to exclude image_preview field entirely (use response_model_exclude or a leaner response model).",
+    "Improve useSpeech hook in /app/frontend/src/a11y.jsx to update isPlaying state immediately on speak() so the Pause button surfaces, and to handle environments where speechSynthesis.getVoices() is empty (headless / first-load) by waiting on the 'voiceschanged' event before bailing."
+  ],
+  "critical_code_review_comments": [
+    "server.py: predict endpoint stores up to ~300KB base64 image_preview in MongoDB which can bloat the captions collection over time; consider storing thumbnails on disk or limiting all images to a small thumbnail (e.g., 64x64) before storage.",
+    "server.py: response_model on /history vs MongoDB projection mismatch - projection-side exclusion is overridden by response_model adding optional fields back; pick one source of truth.",
+    "server.py: temp file is created on every request and deleted in finally - good, but consider sending bytes directly via FileContentWithMimeType if supported to avoid disk I/O.",
+    "Frontend useSpeech: relying solely on browser speech events for UI state is fragile; debounce-update isPlaying on click for snappier UX."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_sighteco_api.py (created)"
+  ],
+  "success_rate": {
+    "backend": "83% (5/6 pytest passed; predict EN, predict HI, reject text, root status, clear history all PASS; history shape minor fail)",
+    "frontend": "92% (upload flow, captions EN/HI, A11y panel, contrast toggle, language toggle, history all working; only TTS button-state flip not verifiable in headless)"
+  },
+  "test_credentials": "N/A - no auth in this app",
+  "seed_data_creation": "Created 2 caption entries via uploads during testing; cleared via DELETE /api/history at the end of pytest run",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend pytest file at /app/backend/tests/test_sighteco_api.py is the regression suite. Real-content JPEGs are generated programmatically with PIL inside the test. Gemini calls take ~10-15s each. Frontend hero CTA testid is 'hero-upload-cta' (not 'hero-cta-button'). Font controls use suffix '-button' (font-increase-button, font-decrease-button, font-reset-button). Caption-text element is always present so to detect a real caption, poll until placeholder text ('appear here' / 'यहाँ') is gone."
+}
