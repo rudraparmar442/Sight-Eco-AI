@@ -6,7 +6,7 @@ export const translations = {
             a11y: "Accessibility settings",
         },
         hero: {
-            badge: "ACCESSIBILITY-FIRST · POWERED BY GEMINI 2.5",
+            badge: "ACCESSIBILITY-FIRST · POWERED BY LLAMA 4",
             title: "Seeing the world through AI.",
             subtitle:
                 "Drop any image. Hear it described. Built for blind and low-vision users — fast, private, and gloriously legible.",
@@ -77,7 +77,7 @@ export const translations = {
             a11y: "एक्सेसिबिलिटी सेटिंग्स",
         },
         hero: {
-            badge: "एक्सेसिबिलिटी-फर्स्ट · GEMINI 2.5 द्वारा संचालित",
+            badge: "एक्सेसिबिलिटी-फर्स्ट · LLAMA 4 द्वारा संचालित",
             title: "AI के माध्यम से दुनिया देखें।",
             subtitle:
                 "कोई भी छवि अपलोड करें। उसका विवरण सुनें। दृष्टिबाधित उपयोगकर्ताओं के लिए बनाया गया — तेज़, निजी, और स्पष्ट।",
