@@ -1,4 +1,4 @@
-# SiteEcho AI 👁️
+# SiteEcho AI 
 
 > An image description tool built for accessibility — upload any image and get a meaningful, human explanation of what's in it.
 
